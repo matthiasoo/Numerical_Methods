@@ -37,13 +37,10 @@ def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
     else:
         x0 = wyliczanie_x(a, b, funkcja, metoda)
 
-        while abs(a - x0) > ex if wybor_k == "1" else iter > 0:
+        while (abs(a - x0) > ex if wybor_k == "1" else iter > 0) and funkcja(x0) != 0 :
             fx = funkcja(x0)
             fa = funkcja(a)
             fb = funkcja(b)
-
-            if fx == 0:
-                break
 
             if fx * fb < 0:
                 a = x0
