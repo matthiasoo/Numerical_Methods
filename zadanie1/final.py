@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def wielomian(x) :
+def wielomian1(x) :
     return x**3 + x**2 - 2*x
+
+def wielomian2(x) :
+    return 3.7*x**5 - 10*x**3 + 6.9*x + 1
 
 def trygonometryczna(x) :
     return np.sin(x)
@@ -13,14 +16,14 @@ def wykladnicza(x) :
 def zlozenie_wiel_tryg(x) :
     return wielomian(trygonometryczna(x))
 
+def zlozenie_wykl_wiel(x) :
+    return wykladnicza(wielomian(x))
+
 def wyliczanie_x(a, b, funkcja, metoda) :
     if metoda == 0 :
         return (a + b) / 2
     else :
         return a - funkcja(a) * (b - a) / (funkcja(b) - funkcja(a))
-
-def zlozenie_wykl_wiel(x) :
-    return wykladnicza(wielomian(x))
 
 def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
     x0 = a
@@ -80,19 +83,21 @@ def main() :
     iter = 0
 
     funkcje = {
-        "1": wielomian,
-        "2": trygonometryczna,
-        "3": wykladnicza,
-        "4": zlozenie_wiel_tryg,
-        "5": zlozenie_wykl_wiel
+        "1": wielomian1,
+        "2": wielomian2,
+        "3": trygonometryczna,
+        "4": wykladnicza,
+        "5": zlozenie_wiel_tryg,
+        "6": zlozenie_wykl_wiel
     }
 
     print("Funkcje:")
-    print("1 - wielomian")
-    print("2 - f. trygonometryczna")
-    print("3 - f. wykładnicza")
-    print("4 - zlozenie: wielomian od f. trygonometrycznej")
-    print("5 - zlozenie: f. wykładnicza od wielomianu")
+    print("1 - wielomian 1")
+    print("2 - wielomian 2")
+    print("3 - f. trygonometryczna")
+    print("4 - f. wykładnicza")
+    print("5 - zlozenie: wielomian od f. trygonometrycznej")
+    print("6 - zlozenie: f. wykładnicza od wielomianu")
     wybor_f = input("Wybierz funkcję: ")
 
     if wybor_f not in funkcje:
