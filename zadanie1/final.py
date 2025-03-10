@@ -6,7 +6,7 @@ def wielomian(x) :
     return x**3 + x**2 - 2*x
 
 def trygonometryczna(x) :
-    return math.sin(x)
+    return np.sin(x)
 
 def wykladnicza(x) :
     return 0.5**x - 1
@@ -57,9 +57,11 @@ def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
     return x0
 
 def metoda_bisekcji(a, b, funkcja, ex, iter, wybor_k) :
+    print("Wynik dla metody bisekcji:")
     return szkielet_metody(a, b, funkcja, ex, iter, 0, wybor_k)
 
 def metoda_regula_falsi(a, b, funkcja, ex, iter, wybor_k) :
+    print("Wynik dla reguły falsi:")
     return szkielet_metody(a, b, funkcja, ex, iter, 1, wybor_k)
 
 def rysowanie_wykresu(a, b, funkcja, x0) :
@@ -89,7 +91,7 @@ def main() :
     print("1 - wielomian")
     print("2 - f. trygonometryczna")
     print("3 - f. wykładnicza")
-    print("4 - zlozenie: wielomian od f. wykładniczej")
+    print("4 - zlozenie: wielomian od f. trygonometrycznej")
     print("5 - zlozenie: f. wykładnicza od wielomianu")
     wybor_f = input("Wybierz funkcję: ")
 
@@ -121,3 +123,5 @@ def main() :
     rysowanie_wykresu(a, b, funkcja, x0)
 
 main()
+
+#TODO wyswietlanie liczby iteracji dla bisekcji
