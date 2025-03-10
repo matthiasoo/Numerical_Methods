@@ -1,4 +1,3 @@
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -25,6 +24,7 @@ def zlozenie_wykl_wiel(x) :
 
 def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
     x0 = a
+    i = 0
 
     if b < a:
         print("b jest mniejsze od a")
@@ -37,7 +37,7 @@ def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
     else:
         x0 = wyliczanie_x(a, b, funkcja, metoda)
 
-        while (abs(a - x0) > ex if wybor_k == "1" else iter > 0) and funkcja(x0) != 0 :
+        while (abs(a - x0) > ex if wybor_k == "1" else i < iter) and funkcja(x0) != 0 :
             fx = funkcja(x0)
             fa = funkcja(a)
             fb = funkcja(b)
@@ -49,11 +49,11 @@ def szkielet_metody(a, b, funkcja, ex, iter, metoda, wybor_k) :
                 b = x0
 
             x0 = wyliczanie_x(a, b, funkcja, metoda)
-
-            if wybor_k == "2":
-                iter -= 1
+            i += 1
 
         print(f"x0 = {x0}")
+        if wybor_k == "1":
+            print(f"Liczba iteracji: {i + 1}")
     return x0
 
 def metoda_bisekcji(a, b, funkcja, ex, iter, wybor_k) :
@@ -123,5 +123,3 @@ def main() :
     rysowanie_wykresu(a, b, funkcja, x0)
 
 main()
-
-#TODO wyswietlanie liczby iteracji dla bisekcji
