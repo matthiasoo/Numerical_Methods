@@ -1,11 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def wielomian(x, coefficients) :
+    result = 0
+    for coeff in coefficients:
+        result = result * x + coeff
+    return result
+
 def wielomian1(x) :
-    return x**3 + x**2 - 2*x
+    return wielomian(x, [1, 1, -2, 0])
 
 def wielomian2(x) :
-    return 3.7*x**5 - 10*x**3 + 6.9*x + 1
+    return wielomian(x, [3.7, 0, -10, 0, 6.9, 1])
 
 def trygonometryczna(x) :
     return np.sin(x)
@@ -19,8 +25,8 @@ def zlozenie_wiel_tryg(x) :
 def zlozenie_wykl_wiel(x) :
     return wykladnicza(wielomian1(x))
 
-def kwadratowa(x):
-    return x**2 - 2
+def kwadratowa(x) :
+    return wielomian(x, [1, 0, -2])
 
 def wyliczanie_x(a, b, funkcja, metoda) :
     if metoda == 0 :
