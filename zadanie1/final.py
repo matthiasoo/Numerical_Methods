@@ -14,10 +14,13 @@ def wykladnicza(x) :
     return 0.5**x - 1
 
 def zlozenie_wiel_tryg(x) :
-    return wielomian(trygonometryczna(x))
+    return wielomian1(trygonometryczna(x))
 
 def zlozenie_wykl_wiel(x) :
-    return wykladnicza(wielomian(x))
+    return wykladnicza(wielomian1(x))
+
+def kwadratowa(x):
+    return x**2 - 2
 
 def wyliczanie_x(a, b, funkcja, metoda) :
     if metoda == 0 :
@@ -76,6 +79,7 @@ def rysowanie_wykresu(a, b, funkcja, x0) :
     plt.ylabel('f(x)')
     plt.title("Wykres funkcji")
     plt.grid(True)
+    # plt.savefig('plot.png')
     plt.show()
 
 def main() :
@@ -88,7 +92,8 @@ def main() :
         "3": trygonometryczna,
         "4": wykladnicza,
         "5": zlozenie_wiel_tryg,
-        "6": zlozenie_wykl_wiel
+        "6": zlozenie_wykl_wiel,
+        "7": kwadratowa
     }
 
     print("Funkcje:")
@@ -98,6 +103,7 @@ def main() :
     print("4 - f. wykładnicza")
     print("5 - zlozenie: wielomian od f. trygonometrycznej")
     print("6 - zlozenie: f. wykładnicza od wielomianu")
+    print("7 - f. kwadratowa")
     wybor_f = input("Wybierz funkcję: ")
 
     if wybor_f not in funkcje:
