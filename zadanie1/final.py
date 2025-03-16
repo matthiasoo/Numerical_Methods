@@ -76,11 +76,12 @@ def metoda_regula_falsi(a, b, funkcja, ex, iter, wybor_k) :
     print("Wynik dla reguły falsi:")
     return szkielet_metody(a, b, funkcja, ex, iter, 1, wybor_k)
 
-def rysowanie_wykresu(a, b, funkcja, x0) :
+def rysowanie_wykresu(a, b, funkcja, xs) :
     x = np.linspace(a, b, 1000)
     y = funkcja(x)
     plt.plot(x, y)
-    plt.scatter(x0, funkcja(x0), color='red')
+    plt.scatter(xs[0], funkcja(xs[0]), color='red')
+    plt.scatter(xs[1], funkcja(xs[1]), color='green')
     plt.xlabel('x')
     plt.ylabel('f(x)')
     plt.title("Wykres funkcji")
@@ -135,8 +136,13 @@ def main() :
     a = float(input("Podaj a: "))
     b = float(input("Podaj b: "))
 
-    metoda_bisekcji(a, b, funkcja, ex, iter, wybor_k)
-    x0 = metoda_regula_falsi(a, b, funkcja, ex, iter, wybor_k)
-    rysowanie_wykresu(a, b, funkcja, x0)
+    x0b =metoda_bisekcji(a, b, funkcja, ex, iter, wybor_k)
+    x0f = metoda_regula_falsi(a, b, funkcja, ex, iter, wybor_k)
+
+    xs = []
+    xs.append(x0b)
+    xs.append(x0f)
+
+    rysowanie_wykresu(a, b, funkcja, xs)
 
 main()
