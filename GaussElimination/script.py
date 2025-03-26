@@ -54,21 +54,25 @@ def solve(matrixX) :
 
 def main() :
     matrixA = np.array([
-        [3, 3, 1],
-        [2, 5, 7],
-        [1, 2, 1]
+        [0.5, -0.0625, 0.1875, -0.0625],
+        [-0.0625, 0.5, 0, 0],
+        [0.1875, 0, 0.375, 0.125],
+        [0.0625, 0, 0.125, 0.25]
     ], dtype=float)
 
     matrixB = np.array([
-        [12],
-        [33],
-        [8]
+        [1.5],
+        [-1.625],
+        [1],
+        [0.4375]
     ], dtype=float)
 
     matrixAB = np.concatenate((matrixA, matrixB), axis=1)
     count = matrixA.shape[0]
-    rankA = rank(matrixA)
-    rankAB = rank(matrixAB)
+    # rankA = rank(matrixA)
+    # rankAB = rank(matrixAB)
+    rankA = np.linalg.matrix_rank(matrixA)
+    rankAB = np.linalg.matrix_rank(matrixAB)
 
     # TODO walidacja
 
