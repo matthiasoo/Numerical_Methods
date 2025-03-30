@@ -141,10 +141,6 @@ def main() :
         # rankA = np.linalg.matrix_rank(matrixA)
         # rankAB = np.linalg.matrix_rank(matrixAB)
 
-        print("rank A = ", rankA)
-        print("rank AB = ", rankAB)
-        print("count = ", count)
-
         if rankA != rankAB :
             print("Układ równań liniowych jest sprzeczny")
         elif rankAB < count :
