@@ -57,18 +57,16 @@ def load_from_file() :
 
 # funkcja obliczajaca rząd macierzy
 def rank(matrix) :
-    R = matrix.shape[0]
     rank = 0
     reducedMatrix = gauss(matrix)
     # print(reducedMatrix)
 
-    for i in range(R):
-        if not np.all(reducedMatrix[i] == 0):
+    for row in reducedMatrix:
+        if not np.allclose(row, 0):
             rank += 1
 
     return rank
 
-# funkcja sprowadzająca macierz do postaci trójkątnej / zredukowanej
 def gauss(matrix) :
     R = matrix.shape[0]
     p = 0 # pivot, element główny
@@ -118,35 +116,45 @@ def main() :
         "2": load_from_file
     }
 
-    print("Sposoby wprowadzania URL:")
-    print("1 - z klawiatury")
-    print("2 - z pliku")
-    choice = input("Wybierz sposób: ")
+    while True :
+        print("MENU\n----")
+        print("1 - Wczytaj macierz z klawiatury")
+        print("2 - Wczytaj macierz z pliku")
+        print("Inna wartość - Zakończ działanie programu")
+        choice = input("Twój wybór: ")
 
-    if choice not in choices:
-        print("Niepoprawny wybór sposobu")
-        exit()
+        if choice not in choices:
+            print("Niepoprawny wybór")
+            exit()
 
-    matrixA, matrixB = choices[choice]()
+        matrixA, matrixB = choices[choice]()
 
-    matrixAB = np.concatenate((matrixA, matrixB), axis=1)
-    count = matrixA.shape[0] # liczba niewiadomych
+        matrixAB = np.concatenate((matrixA, matrixB), axis=1)
 
-    rankA = rank(matrixA)
-    rankAB = rank(matrixAB)
-    # rankA = np.linalg.matrix_rank(matrixA)
-    # rankAB = np.linalg.matrix_rank(matrixAB)
+        print("Wczytana macierz:")
+        print(matrixAB)
 
-    if rankA != rankAB :
-        print("Układ równań liniowych jest sprzeczny")
-        exit()
-    elif rankAB < count :
-        print(f"Układ równań liniowych jest nieoznaczony (rozwiązania układu zależą od liczby parametrów równej {count - rankA})")
-        exit()
-    else :
-        xs = solve(matrixAB)
-        print("Rozwiązania:")
-        for i in range(count):
-            print(f"x{i} = {xs[i]}")
+        count = matrixA.shape[0] # liczba niewiadomych
+
+        rankA = rank(matrixA)
+        rankAB = rank(matrixAB)
+        # rankA = np.linalg.matrix_rank(matrixA)
+        # rankAB = np.linalg.matrix_rank(matrixAB)
+
+        print("rank A = ", rankA)
+        print("rank AB = ", rankAB)
+        print("count = ", count)
+
+        if rankA != rankAB :
+            print("Układ równań liniowych jest sprzeczny")
+        elif rankAB < count :
+            print(f"Układ równań liniowych jest nieoznaczony (rozwiązania układu zależą od liczby parametrów równej {count - rankA})")
+        else :
+            xs = solve(matrixAB)
+            print("Rozwiązania:")
+            for i in range(count):
+                print(f"x{i} = {xs[i]}")
+
+        print("\n")
 
 main()
