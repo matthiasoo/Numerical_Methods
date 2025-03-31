@@ -78,11 +78,17 @@ def gauss(matrix) :
         #             matrix[[p, i]] = matrix[[i, p]]
         #             i = R
 
-        # częściowy wybór elementu głównego
+        # częściowy wybór elementu głównego (partial pivoting)
+        # szukanie największego elementu w kolumnie pod pivotem
+        # i jeśli znajdzie większy to zamienia odpowiednie wiersze
         for i in range(p+1, R) :
             if abs(matrix[p][p]) < abs(matrix[i][p]) :
-                matrix[[i, p]] = matrix[[p, i]]
+                matrix[[p, i]] = matrix[[i, p]]
 
+        # eliminacja współczynników poniżej wiersza z pivotem
+        # "mnożnik" otrzymujemy poprzez podzielenie pierwszego elementu
+        # przez pivot, a następnie mnożymy przez niego wiersz z pivotem
+        # i odejmujemy otrzymany wiersz od wiersza który redukujemy
         for i in range(p+1, R) :
             multiplier = matrix[i, p] / matrix[p, p]
             matrix[i] -= (multiplier * matrix[p])
@@ -98,15 +104,18 @@ def solve(matrixX) :
     x = np.zeros(R)
     matrix = gauss(matrixX)
 
-    x[R-1] = matrix[R-1, R] / matrix[R-1, R-1]
+    # obliczenie ostatniej niewiadomej
+    x[R-1] = matrix[R-1, R] / matrix[R-1, R-1] # P / L (dzielenie przez element główny)
 
+    # iteracja od przedostatniego wiersza do pierwszego obliczając
+    # poszczególne elementy na podstawie wartości już obliczonych
     for i in range(R-2, -1, -1) :
-        x[i] = matrix[i, R]
+        x[i] = matrix[i, R] # pobranie prawej strony równania
 
         for j in range(i + 1, R) :
-            x[i] -= matrix[i, j] * x[j]
+            x[i] -= matrix[i, j] * x[j] # odejmowanie znanych wartości
 
-        x[i] /= matrix[i, i]
+        x[i] /= matrix[i, i] # dzielenie przez element główny
 
     return x
 
