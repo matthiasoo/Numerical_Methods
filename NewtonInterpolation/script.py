@@ -119,7 +119,7 @@ class InterpolationApp:
         coeffs = np.zeros(n)
         coeffs[0] = divided_diff[0]
 
-        # Obliczanie różnic podzielonych
+        # Obliczanie ilorazów różnicowych n-tego rzędu
         for j in range(1, n):
             for i in range(n - 1, j - 1, -1):
                 divided_diff[i] = (divided_diff[i] - divided_diff[i - 1]) / (x_nodes[i] - x_nodes[i - j])
@@ -180,7 +180,7 @@ class InterpolationApp:
 
             # Rysowanie wykresu
             self.ax.clear()
-            self.ax.plot(x_plot, y_original, label="Funkcja oryginalna", linewidth=2)
+            self.ax.plot(x_plot, y_original, label="Funkcja interpolowana", linewidth=2)
             self.ax.plot(x_plot, y_interp, label="Wielomian interpolacyjny", linestyle='--', linewidth=2)
             self.ax.scatter(x_nodes, y_nodes, color='red', label="Węzły interpolacji", zorder=5)
             self.ax.legend()
