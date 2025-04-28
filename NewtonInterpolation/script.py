@@ -71,6 +71,7 @@ class InterpolationApp:
     def reset_custom_nodes(self):
         self.custom_nodes.clear()
         self.entry.config(state="normal")
+        self.nodes_count_var.set(0)
 
     def linear_function(self, x):
         # Funkcja liniowa: f(x) = 2x + 1
