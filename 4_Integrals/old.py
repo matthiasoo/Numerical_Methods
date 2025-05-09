@@ -35,12 +35,12 @@ def fx(x, function_choice):
 
 def wx(x) :
     # w(x) = 1/sqrt(1-x^2) - funkcja wagowa
-    return np.sqrt(1 - x * x)
+    return 1 / np.sqrt(1 - x * x)
 
 # Funkcja obliczająca w(x) * f(x)
-def evaluate_wxfx(x, function_id):
+def wxfx(x, function_id):
     try:
-        return fx(x, function_id) / wx(x)
+        return fx(x, function_id) * wx(x)
     except ZeroDivisionError:
         return 0
 
@@ -61,11 +61,11 @@ def simpson_integral(function_id, a, b, eps):
         n *= 2
         h = (b - a) / n
         prev_result = result
-        result = evaluate_wxfx(a, function_id) + evaluate_wxfx(b, function_id)
+        result = wxfx(a, function_id) + wxfx(b, function_id)
 
         for i in range(1, n // 2):
-            result += 4 * evaluate_wxfx(a + (2 * i - 1) * h, function_id)
-            result += 2 * evaluate_wxfx(a + (2 * i) * h, function_id)
+            result += 4 * wxfx(a + (2 * i - 1) * h, function_id)
+            result += 2 * wxfx(a + (2 * i) * h, function_id)
 
         result *= h / 3
         if abs(prev_result - result) < eps and n > 1:
