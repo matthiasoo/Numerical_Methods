@@ -42,4 +42,7 @@ Uses **Chebyshev nodes and weights** (typically 2–5 nodes) to efficiently comp
 
 ---
 
-More numerical methods will be added soon!
+## 📌 5. Function Approximation
+
+### 🔹 Chebyshev Approximation  
+Approximates a function on a given interval using **Chebyshev polynomials of the first kind**.
