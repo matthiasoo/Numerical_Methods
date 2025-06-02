@@ -1,55 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-PI = np.pi
-
-def horner(x, coefficients):
-    result = 0
-    for coeff in coefficients:
-        result = result * x + coeff
-    return result
-
-def linear(x):
-    return 2 * x + 1
-
-def absolute(x):
-    return np.abs(x)
-
-def poly(x):
-    # 3x^3 + 2x^2 + 5x + 7
-    return horner(x, [3, 2, 5, 7])
-
-def trigonometric(x):
-    return np.sin(x)
-
-def composite(x):
-    return trigonometric(linear(x))
-
-def fx(x, function_choice):
-    if function_choice == 1:
-        return linear(x)
-    elif function_choice == 2:
-        return absolute(x)
-    elif function_choice == 3:
-        return poly(x)
-    elif function_choice == 4:
-        return trigonometric(x)
-    elif function_choice == 5:
-        return composite(x)
-    else:
-        raise ValueError("Nie ma takiej funkcji!")
-
-# Kwadratura Gaussa-Czebyszewa
-def gauss_chebyshev(function_id, nodes_num):
-    integral = 0
-    for i in range(1, nodes_num + 1):
-        w = PI / nodes_num
-        node = -np.cos((2 * i - 1) * PI / (2 * nodes_num))
-        integral += w * fx(node, function_id)
-    return integral
-
-# Wielomian Czebyszewa
-def chebyshev_poly(x, n):
+# Wielomian Czebyszewa k-tego stopnia
+'''
+def chebyshev_polynomial(x,k):
+    if abs(x)<=1:
+        return np.cos(k*np.acos(x))
+    elif x>1:
+        return np.cosh(k*np.acosh(x))
+    return (-1)**k*np.cosh(k*np.acosh(-x))
+'''
+# Wielomian Czebyszewa k-tego stopnia
+def chebyshev_polynomial(x, n):
     if n == 0:
         return 1
     elif n == 1:
@@ -63,100 +25,125 @@ def chebyshev_poly(x, n):
             T_curr = T_next
         return T_curr
 
-# Obliczanie współczynników aproksymacji Czebyszewa
-def compute_chebyshev_coefficients(function_id, degree, nodes_num):
-    coefficients = []
-    for n in range(degree + 1):
-        def integrand(x):
-            try:
-                return fx(x, function_id) * chebyshev_poly(x, n)
-            except ZeroDivisionError:
-                return 0
-
-        integral = gauss_chebyshev(lambda x: fx(x, function_id) * chebyshev_poly(x, n), nodes_num)
-        coeff = (1 / PI) * integral if n == 0 else (2 / PI) * integral
-        coefficients.append(coeff)
-    return coefficients
-
-# Obliczanie wartości aproksymacji Czebyszewa
-def chebyshev_approx(x, coefficients):
+# Wartość wielomianu aproksymacyjnego
+def chebyshev(coeffs,a,b, x):
+    x=(2*x-(a+b))/(b-a)
     result = 0
-    for n, coeff in enumerate(coefficients):
-        result += coeff * chebyshev_poly(x, n)
+    it = 0
+    for c in coeffs:
+        result+=c*chebyshev_polynomial(x,it)
+        it=it+1
     return result
 
-# Obliczanie błędu aproksymacji na przedziale [a, b]
-def compute_error(function_id, coefficients, a, b, num_points=1000):
-    x = np.linspace(a, b, num_points)
-    y_true = fx(x, function_id)
-    y_approx = np.array([chebyshev_approx(xi, coefficients) for xi in x])
-    # Mean squared error
-    mse = np.mean((y_true - y_approx) ** 2)
-    return mse
+# Funkcje do aproksymacji
+def linear(x):
+    return 2*x+1
 
-def plot_functions(function_id, coefficients, a, b, title):
-    x = np.linspace(a, b, 1000)
-    y_true = fx(x, function_id)
-    y_approx = np.array([chebyshev_approx(xi, coefficients) for xi in x])
+def absolute(x):
+    return np.abs(x)
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y_true, 'b-', label='Funkcja oryginalna')
-    plt.plot(x, y_approx, 'r--', label='Wielomian aproksymacyjny')
-    plt.title(title)
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.grid(True)
-    plt.legend()
-    plt.close()
+def polynomial(x):
+    return x**3 - 2*x**2 + x - 1
 
-def main():
-    print("Wybierz funkcję do aproksymacji:")
-    print("-------------------------------")
-    print("1. Liniowa: 2x + 1")
-    print("2. Moduł: |x|")
-    print("3. Wielomian: 3x^3 + 2x^2 + 5x + 7")
-    print("4. Trygonometryczna: sin(x)")
-    print("5. Złożenie: sin(2x + 1)")
+def trigonometric(x):
+    return np.sin(x)
 
-    function_id = int(input("\nFunkcja (1-5): "))
-    if function_id not in [1, 2, 3, 4, 5]:
-        print("Nie ma takiej funkcji!")
-        return
+# Zbiór dostępnych funkcji
+functions = {
+    "Liniowa": linear,
+    "|x|": absolute,
+    "Wielomian": polynomial,
+    "Trygonometryczna": trigonometric
+}
 
-    a = float(input("Podaj lewą stronę przedziału aproksymacji: "))
-    b = float(input("Podaj prawą stronę przedziału aproksymacji: "))
-    if a >= b or a < -1 or b > 1:
-        print("Przedział musi nie może wychodzić poza zakres [-1, 1] oraz a < b!")
-        return
-
-    mode = input("Wybierz tryb: (1) Stały stopień, (2) Docelowy błąd: ")
-    nodes_num = int(input("Podaj liczbę węzłów Gaussa-Czebyszewa: "))
-
-    if mode == '1':
-        degree = int(input("Podaj stopień wielomianu: "))
-        coefficients = compute_chebyshev_coefficients(function_id, degree, nodes_num)
-        error = compute_error(function_id, coefficients, a, b)
-        print(f"\nWspółczynniki aproksymacji Czebyszewa: {coefficients}")
-        print(f"Bład aproksymacji: {error}")
-        plot_functions(function_id, coefficients, a, b, f"Aproksymacja Czebyszewa (Stopień {degree})")
-    elif mode == '2':
-        target_error = float(input("Podaj błąd: "))
-        degree = 1
-        while True:
-            coefficients = compute_chebyshev_coefficients(function_id, degree, nodes_num)
-            error = compute_error(function_id, coefficients, a, b)
-            print(f"Stopień {degree}: Bład = {error}")
-            if error < target_error or degree > 50:
-                print(f"\nOstateczny stopień: {degree}")
-                print(f"Współczynniki aproksymacji Czebyszewa: {coefficients}")
-                print(f"Błąd aproksymacji: {error}")
-                plot_functions(function_id, coefficients, a, b, f"Aproksymacja Czebyszewa (Stopień {degree})")
-                break
-            degree += 1
+def fx(x, function_choice):
+    if function_choice == 1:
+        return linear(x)
+    elif function_choice == 2:
+        return absolute(x)
+    elif function_choice == 3:
+        return polynomial(x)
+    elif function_choice == 4:
+        return trigonometric(x)
     else:
-        print("Nieprawidłowy tryb!")
-        return
+        raise ValueError("Nie ma takiej funkcji!")
+
+# Aproksymacja Czebyszewa - współczynniki
+def chebyshev_approximation(f, d, a, b, n):
+    x_j = np.cos((np.arange(n) + 0.5) * np.pi / n)  # Węzły Czebyszewa na [-1; 1]
+    x_mapped = (b-a)/2 * x_j + (a+b)/2  # Transformacja do przedziału [a; b]
+    f_values = f(x_mapped)
+    
+    coefficients = np.zeros(d)
+    for i in range(d):
+        coefficients[i] = (2 / n) * np.sum(f_values * chebyshev_polynomial(x_j, i))
+    coefficients[0]/=2
+    return coefficients
 
 
-if __name__ == "__main__":
-    main()
+# kwadratura Gaussa-Czebyszewa dla n węzłów
+def integral_gauss_chebyshev(function, a, b, nodes_num) :
+    integral = 0
+    w = np.pi / nodes_num
+    for i in range(1, nodes_num + 1) :
+        node = np.cos((2 * i - 1) * np.pi / (2 * nodes_num))
+        integral += w * function(node)
+    return integral
+# Obliczanie błędu aproksymacji
+def approximation_error(func, coeffs, a, b, nodes_num):
+    error_func = lambda x: abs(func(x) - chebyshev(coeffs,a,b, x))
+    error = integral_gauss_chebyshev(error_func, a, b, nodes_num)
+    return error
+
+# Tryb iteracyjny: dobór stopnia wielomianu
+def iterative_approximation(func, a, b, num_nodes, error_threshold):
+    degree = 1
+    while True:
+        coeffs = chebyshev_approximation(func, degree, a, b, num_nodes)
+        error = approximation_error(func, coeffs, a, b, num_nodes)
+        if error <= error_threshold:
+            return degree, coeffs
+        degree += 1
+
+print("Wybierz funkcję do aproksymacji:")
+for i, key in enumerate(functions.keys(), 1):
+    print(f"{i}. {key}")
+
+choice = int(input("Podaj numer funkcji: ")) - 1
+selected_function = list(functions.values())[choice]
+
+a = float(input("Podaj lewą stronę przedziału aproksymacji: "))
+b = float(input("Podaj prawą stronę przedziału aproksymacji: "))
+if a >= b:
+    print("Nieprawidłowy przedział")
+    exit()
+
+mode = input("Czy chcesz określić oczekiwany błąd aproksymacji? (tak/nie): ")
+
+if mode.lower() == "tak":
+    error_threshold = float(input("Podaj maksymalny błąd aproksymacji: "))
+    num_nodes = int(input("Podaj ilość węzłów dla całkowania numerycznego: "))
+    degree, coeffs = iterative_approximation(selected_function, a, b, num_nodes, error_threshold)
+    print(f"Dobrany stopień wielomianu: {degree}")
+else:
+    degree = int(input("Podaj stopień wielomianu aproksymacyjnego: "))
+    num_nodes = int(input("Podaj ilość węzłów dla całkowania numerycznego: "))
+    coeffs = chebyshev_approximation(selected_function, degree, a, b, num_nodes)
+
+print("Współczynniki aproksymacji Czebyszewa:\n")
+print(coeffs)
+
+error = approximation_error(selected_function, coeffs, a, b, num_nodes)
+print(f"Błąd aproksymacji: {error}")
+
+# Rysowanie wykresu
+x_values = np.linspace(a, b, 100)
+y_original = selected_function(x_values)
+y_approx = [chebyshev(coeffs,a,b, x) for x in x_values]
+
+plt.plot(x_values, y_original, label="Oryginalna funkcja")
+plt.plot(x_values, y_approx, label="Aproksymacja Czebyszewa", linestyle='dashed')
+plt.legend()
+plt.title("Aproksymacja Czebyszewa")
+plt.show()
+
